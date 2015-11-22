@@ -33,4 +33,8 @@ public class ListItem {
     public void setPic(File picture) {
         mPicture= picture;
     }
+
+    public String getPath() {
+        return mPicture.getAbsolutePath();
+    }
 }

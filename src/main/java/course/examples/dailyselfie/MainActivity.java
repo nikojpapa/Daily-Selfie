@@ -1,7 +1,5 @@
 package course.examples.dailyselfie;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Camera;
@@ -11,6 +9,9 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -28,7 +29,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements PicItemFragment
-        .OnPicSelectListener {
+        .OnPicSelectListener, ViewPicFragment.OnLargePicListener {
     private static final String TAG = "ds-main";
     private static final int START_CAMERA = 1;
     protected static final File SELFIE_DIR= new File(Environment.getExternalStorageDirectory()
@@ -46,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements PicItemFragment
 
         Log.i(TAG, "" + SELFIE_DIR.mkdirs() + ", " + SELFIE_DIR.getAbsolutePath());
 
-        mFragmentManager = getFragmentManager();
+        mFragmentManager = getSupportFragmentManager();
+        mFragmentManager.enableDebugLogging(true);
         FragmentTransaction fragmentTransaction = mFragmentManager
                 .beginTransaction();
         fragmentTransaction.add(R.id.picList_fragment_container, mPicItemFragment);
@@ -85,6 +87,18 @@ public class MainActivity extends AppCompatActivity implements PicItemFragment
     }
 
     public void onPicSelect(ListItem pic) {
-        Toast.makeText(this, pic.getName(), Toast.LENGTH_SHORT).show();
+        ViewPicFragment viewPicFragment= ViewPicFragment.newInstance(pic.getPath());
+
+        FragmentTransaction fragmentTransaction= mFragmentManager.beginTransaction();
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.picList_fragment_container, viewPicFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        mFragmentManager.executePendingTransactions();
+//        Toast.makeText(this, pic.getName(), Toast.LENGTH_SHORT).show();
+    }
+
+    public void onLargePicClick() {
+        onBackPressed();
     }
 }

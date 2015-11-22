@@ -3,7 +3,8 @@ package course.examples.dailyselfie;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +46,7 @@ public class PicItemFragment extends Fragment implements AbsListView.OnItemClick
     /**
      * The fragment's ListView/GridView.
      */
-    private GridView mListView;
+    private ListView mListView;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -88,10 +89,10 @@ public class PicItemFragment extends Fragment implements AbsListView.OnItemClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_listitem_grid, container, false);
+        View view = inflater.inflate(R.layout.fragment_listitem_list, container, false);
 
         // Set the adapter
-        mListView = (GridView) view.findViewById(R.id.grid_list);
+        mListView = (ListView) view.findViewById(R.id.list_list);
         mListView.setAdapter(mAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
