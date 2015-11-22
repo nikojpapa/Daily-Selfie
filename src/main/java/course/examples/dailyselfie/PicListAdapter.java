@@ -58,7 +58,7 @@ public class PicListAdapter extends BaseAdapter {
 
         for (File img : images) {
             if (!alreadyHere.contains(img)) {
-                Log.i(TAG, img.getName());
+//                Log.i(TAG, img.getName());
                 add(new ListItem(img));
             }
         }

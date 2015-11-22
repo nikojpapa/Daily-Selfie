@@ -1,5 +1,7 @@
 package course.examples.dailyselfie;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Camera;
@@ -25,13 +27,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
-    private String TAG = "ds-main";
+public class MainActivity extends AppCompatActivity implements PicItemFragment
+        .OnPicSelectListener {
+    private static final String TAG = "ds-main";
     private static final int START_CAMERA = 1;
     protected static final File SELFIE_DIR= new File(Environment.getExternalStorageDirectory()
             +"/daily_selfie");
 
-    PicListAdapter mAdapter;
+    private final PicItemFragment mPicItemFragment = new PicItemFragment();
+    private FragmentManager mFragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +46,11 @@ public class MainActivity extends AppCompatActivity {
 
         Log.i(TAG, "" + SELFIE_DIR.mkdirs() + ", " + SELFIE_DIR.getAbsolutePath());
 
-        mAdapter= new PicListAdapter(this);
-        ListView listView= (ListView) findViewById(R.id.listView);
-        listView.setAdapter(mAdapter);
+        mFragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = mFragmentManager
+                .beginTransaction();
+        fragmentTransaction.add(R.id.picList_fragment_container, mPicItemFragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -78,28 +84,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        loadItems();
+    public void onPicSelect(ListItem pic) {
+        Toast.makeText(this, pic.getName(), Toast.LENGTH_SHORT).show();
     }
-
-    private void loadItems() {
-        mAdapter.loadNewImages();
-    }
-
-//    protected void onActivityResult(int requestCode, int resultCode,
-//                                    Intent imageReturnedIntent) {
-//        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-//        switch (requestCode) {
-//            case START_CAMERA:
-//                if (resultCode == RESULT_OK) {
-//
-//                    break;
-//
-//                }
-//
-//        }
-//    }
 }
