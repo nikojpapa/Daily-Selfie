@@ -18,8 +18,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import course.examples.dailyselfie.dummy.DummyContent;
-
 /**
  * A fragment representing a list of Items.
  * <p>

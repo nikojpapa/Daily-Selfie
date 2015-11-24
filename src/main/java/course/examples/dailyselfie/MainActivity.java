@@ -1,5 +1,7 @@
 package course.examples.dailyselfie;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Camera;
@@ -32,8 +34,11 @@ public class MainActivity extends AppCompatActivity implements PicItemFragment
         .OnPicSelectListener, ViewPicFragment.OnLargePicListener {
     private static final String TAG = "ds-main";
     private static final int START_CAMERA = 1;
+    private static final int NOTIFICATION_REQUEST= 2;
     protected static final File SELFIE_DIR= new File(Environment.getExternalStorageDirectory()
             +"/daily_selfie");
+    private static final long INITIAL_ALARM_DELAY = 1 * 30 * 1000L; //30 secs
+    private static final long ALARM_INTERVAL= 1 * 30 * 1000L; //30 secs
 
     private final PicItemFragment mPicItemFragment = new PicItemFragment();
     private FragmentManager mFragmentManager;
@@ -53,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements PicItemFragment
                 .beginTransaction();
         fragmentTransaction.add(R.id.picList_fragment_container, mPicItemFragment);
         fragmentTransaction.commit();
+
+        setRepeatingAlarm();
     }
 
     @Override
@@ -100,5 +107,25 @@ public class MainActivity extends AppCompatActivity implements PicItemFragment
 
     public void onLargePicClick() {
         onBackPressed();
+    }
+
+    private void setRepeatingAlarm() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        Intent notificationReceiverIntent = new Intent(this,
+                AlarmNotificationReceiver.class);
+
+        PendingIntent notificationReceiverPendingIntent= PendingIntent.getBroadcast(this,
+                NOTIFICATION_REQUEST,
+                notificationReceiverIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis()
+                        +INITIAL_ALARM_DELAY,
+                ALARM_INTERVAL,
+                notificationReceiverPendingIntent);
+
+        Toast.makeText(this, "Alarm set", Toast.LENGTH_SHORT).show();
     }
 }
