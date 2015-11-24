@@ -20,7 +20,7 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
         // an Intent broadcast.
 
         Intent startMain= new Intent(context, MainActivity.class);
-//changing test
+
         PendingIntent startMainPending= PendingIntent.getActivity(context,
                 0,
                 startMain,
